@@ -2,19 +2,13 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 COPY *.sln ./
-COPY Auth.Api.Rest/*.csproj ./Auth.Api.Rest/
-COPY Auth.Application/*.csproj ./Auth.Application/
-COPY Auth.Domain/*.csproj ./Auth.Domain/
-COPY Auth.Persistence/*.csproj ./Auth.Persistence/
+COPY Gateway/*.csproj ./Gateway/
 
 RUN dotnet restore
 
-COPY Auth.Api.Rest/ ./Auth.Api.Rest/
-COPY Auth.Application/ ./Auth.Application/
-COPY Auth.Domain/ ./Auth.Domain/
-COPY Auth.Persistence/ ./Auth.Persistence/
+COPY Gateway/ ./Gateway/
 
-WORKDIR /src/Auth.Api.Rest
+WORKDIR /src/Gateway
 RUN dotnet publish -c Release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -27,4 +21,4 @@ USER appuser
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 CMD ["sh", "/app/healthcheck.sh"]
 
-ENTRYPOINT ["dotnet", "Auth.Api.Rest.dll"]
+ENTRYPOINT ["dotnet", "Gateway.dll"]
