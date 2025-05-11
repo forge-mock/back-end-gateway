@@ -17,7 +17,6 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("https://localhost:3000")
-                .AllowCredentials()
                 .WithMethods("GET", "POST", "PUT", "DELETE")
                 .WithHeaders("Authorization", "Content-Type");
         }));
@@ -35,6 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(jwtSecret)),
+            ClockSkew = TimeSpan.Zero,
         };
     });
 builder.Services.AddAuthorization();
