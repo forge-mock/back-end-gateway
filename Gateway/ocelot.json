@@ -10,7 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/gateway/user/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST"],
+      "UpstreamHttpMethod": ["GET", "PUT"],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
