@@ -10,6 +10,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Env.Load("../.env");
 string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? string.Empty;
 
+builder.Configuration.AddOcelot();
 builder.Services.AddCors(options =>
     options.AddPolicy(
         "Development",
@@ -18,7 +19,7 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("https://localhost:3000")
                 .AllowCredentials()
                 .WithMethods("GET", "POST", "PUT", "DELETE")
-                .WithHeaders("Bearer", "Content-Type");
+                .WithHeaders("Authorization", "Content-Type");
         }));
 builder.Services.AddOcelot();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
