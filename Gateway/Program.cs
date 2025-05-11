@@ -10,15 +10,15 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Env.Load("../.env");
 string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? string.Empty;
 
+builder.Configuration.AddOcelot();
 builder.Services.AddCors(options =>
     options.AddPolicy(
         "Development",
         policy =>
         {
             policy.WithOrigins("https://localhost:3000")
-                .AllowCredentials()
                 .WithMethods("GET", "POST", "PUT", "DELETE")
-                .WithHeaders("Bearer", "Content-Type");
+                .WithHeaders("Authorization", "Content-Type");
         }));
 builder.Services.AddOcelot();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -34,6 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(jwtSecret)),
+            ClockSkew = TimeSpan.Zero,
         };
     });
 builder.Services.AddAuthorization();
